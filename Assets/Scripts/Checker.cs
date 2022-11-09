@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class Checker : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+
+    public void Move()
+    {
+
+    }
+
+    public void CanMove()
+    {
+
+    }
     
 }
