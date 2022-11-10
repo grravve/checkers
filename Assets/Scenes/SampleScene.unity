@@ -1273,6 +1273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42be75db7f065c439df2cc5ff97dcff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _blackCheckerPrefab: {fileID: 2598597693972145163, guid: 73c4f110406863f4080ecdb293531892, type: 3}
+  _whiteCheckerPrefab: {fileID: 2598597693972145163, guid: 5e0603a8c4986f940bf26f562bfd9d8a, type: 3}
 --- !u!4 &979194631
 Transform:
   m_ObjectHideFlags: 0

@@ -4,24 +4,33 @@ using UnityEngine;
 
 public class Board : MonoBehaviour
 {
-    private Grid grid;
-    private int[,] checkersPattern =
-    {
-        {0, 1, 0, 1, 0, 1, 0, 1},
-        {1, 0, 1, 0, 1, 0, 1, 0},
-        {0, 1, 0, 1, 0, 1, 0, 1},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {1, 0, 1, 0, 1, 0, 1, 0},
-        {0, 1, 0, 1, 0, 1, 0, 1},
-        {1, 0, 1, 0, 1, 0, 1, 0}
-    };
+    private const string BlackSpawnPointTagName = "BlackSpawnPoint";
+    private const string WhiteSpawnPointTagName = "WhiteSpawnPoint";
+
+    [SerializeField] private GameObject _blackCheckerPrefab;
+    [SerializeField] private GameObject _whiteCheckerPrefab;
+
+    private Grid _grid;
 
     void Start()
     {
-        grid = new Grid(8, 8, 1);
+        _grid = new Grid(8, 8, 1);
 
         // Set checkers to the board
+
+        SpawnCheckersOfSide(BlackSpawnPointTagName, _blackCheckerPrefab);
+        SpawnCheckersOfSide(WhiteSpawnPointTagName, _whiteCheckerPrefab);
+    }
+
+    private void SpawnCheckersOfSide(string tag, GameObject prefab)
+    {
+        GameObject[] spawnPoints = GameObject.FindGameObjectsWithTag(tag);
+
+        foreach (var spawnPoint in spawnPoints)
+        {
+            var go = Instantiate(prefab, spawnPoint.transform.position, Quaternion.identity);
+            go.GetComponent<Checker>().Initialize(_grid);
+        }
     }
 
     private void Update()
@@ -30,7 +39,7 @@ public class Board : MonoBehaviour
         {
             // Выделяем выбранную область через Grid
             Vector3 mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition, Camera.main);
-            grid.SetValue(mouseWorldPosition);
+            _grid.SetValue(mouseWorldPosition);
             
             // Получаем компонент шашки   
         }
@@ -40,5 +49,4 @@ public class Board : MonoBehaviour
     {
         return camera.ScreenToWorldPoint(clickPosition);
     }
-
 }
