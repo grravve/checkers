@@ -19,16 +19,28 @@ public class Grid
 
     private int[,] _checkersPattern =
     {
-        {0, 2, 0, 2, 0, 2, 0, 2},
-        {2, 0, 2, 0, 2, 0, 2, 0},
-        {0, 2, 0, 2, 0, 2, 0, 2},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0},
-        {1, 0, 1, 0, 1, 0, 1, 0},
-        {0, 1, 0, 1, 0, 1, 0, 1},
-        {1, 0, 1, 0, 1, 0, 1, 0}
+        { 1, 0, 1, 0, 1, 0, 1, 0},
+        { 0, 1, 0, 1, 0, 1, 0, 1},
+        { 1, 0, 1, 0, 1, 0, 1, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 2, 0, 2, 0, 2, 0, 2},
+        { 2, 0, 2, 0, 2, 0, 2, 0},
+        { 0, 2, 0, 2, 0, 2, 0, 2},
     };
-
+/*
+    private int[,] _checkersPattern2 =
+    {
+        { 0, 2, 0, 2, 0, 2, 0, 2},
+        { 2, 0, 2, 0, 2, 0, 2, 0},
+        { 0, 2, 0, 2, 0, 2, 0, 2},
+        { 0, 0, 0, 0, 0, 0, 0, 0},
+        { 0, 0, 0, 0, 0, 0, 0, 0},
+        { 1, 0, 1, 0, 1, 0, 1, 0},
+        { 0, 1, 0, 1, 0, 1, 0, 1},
+        { 1, 0, 1, 0, 1, 0, 1, 0}
+    };
+        */
     public Grid(int width, int height, int cellSize)
     {
         _width = width;
@@ -44,19 +56,19 @@ public class Grid
 
     private void GridRender()
     {
-        for (int x = 0; x < _gridSquareObjects.GetLength(0); x++)
+        for (int y = 0; y < _gridSquareObjects.GetLength(0); y++)
         {
-            for (int y = 0; y < _gridSquareObjects.GetLength(1); y++)
+            for (int x = 0; x < _gridSquareObjects.GetLength(1); x++)
             {
                 _gridSquareObjects[x, y] = new GameObject();
                 _gridSquareObjects[x, y].transform.position = GetWorldPosition(x, y) + new Vector3(_cellSize, _cellSize) * 0.5f;
                 _gridSquareObjects[x, y].transform.localScale = new Vector3(.75f, .75f);
 
-                if (_checkersPattern[x, y] == 1)
+                if (_checkersPattern[y, x] == 1)
                 {
                     _gridSquareObjects[x, y].tag = WhiteSpawnPointTagName;
                 }
-                else if (_checkersPattern[x, y] == 2) 
+                else if (_checkersPattern[y, x] == 2) 
                 {
                     _gridSquareObjects[x, y].tag = BlackSpawnPointTagName;
                 }
