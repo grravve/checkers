@@ -8,6 +8,8 @@ public class Grid
     private const string BlackSpawnPointTagName = "BlackSpawnPoint";
     private const string WhiteSpawnPointTagName = "WhiteSpawnPoint";
 
+    public int CellSize => _cellSize;
+
     private int _width;
     private int _height;
     private int _cellSize;
@@ -28,19 +30,7 @@ public class Grid
         { 2, 0, 2, 0, 2, 0, 2, 0},
         { 0, 2, 0, 2, 0, 2, 0, 2},
     };
-/*
-    private int[,] _checkersPattern2 =
-    {
-        { 0, 2, 0, 2, 0, 2, 0, 2},
-        { 2, 0, 2, 0, 2, 0, 2, 0},
-        { 0, 2, 0, 2, 0, 2, 0, 2},
-        { 0, 0, 0, 0, 0, 0, 0, 0},
-        { 0, 0, 0, 0, 0, 0, 0, 0},
-        { 1, 0, 1, 0, 1, 0, 1, 0},
-        { 0, 1, 0, 1, 0, 1, 0, 1},
-        { 1, 0, 1, 0, 1, 0, 1, 0}
-    };
-        */
+
     public Grid(int width, int height, int cellSize)
     {
         _width = width;
@@ -121,6 +111,4 @@ public class Grid
         GetXY(worldPosition, out x, out y);
         SetValue(x, y);
     }
-
-    public GameObject[,] GetSquareObjects() => _gridSquareObjects;
 }

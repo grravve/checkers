@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2317007089545948394}
   - component: {fileID: 4767401199848765574}
   - component: {fileID: 2063309821347332650}
+  - component: {fileID: 7808676208768611552}
   m_Layer: 0
   m_Name: BlackCheckerPrefab
   m_TagString: Untagged
@@ -98,3 +99,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _checkerModel: {fileID: 11400000, guid: 71d06ef3532eccb4b80216d3afbd30e1, type: 2}
+--- !u!61 &7808676208768611552
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2598597693972145163}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
