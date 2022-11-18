@@ -8,6 +8,8 @@ public class Grid
     private const string BlackSpawnPointTagName = "BlackSpawnPoint";
     private const string WhiteSpawnPointTagName = "WhiteSpawnPoint";
 
+    public int Width => _width;
+    public int Height => _height;
     public int CellSize => _cellSize;
 
     private int _width;

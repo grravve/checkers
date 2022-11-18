@@ -14,10 +14,12 @@ public class Board : MonoBehaviour
     [SerializeField] private GameObject _whiteCheckerPrefab;
 
     private Grid _grid;
+    private int _gridHeight = 8;
+    private int _gridWidth = 8;
 
     private void Awake()
     {
-        _grid = new Grid(8, 8, 1);
+        _grid = new Grid(_gridWidth, _gridHeight, 1);
     }
 
     private void Start()
