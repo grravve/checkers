@@ -53,6 +53,7 @@ public class Grid
             for (int x = 0; x < _gridSquareObjects.GetLength(1); x++)
             {
                 _gridSquareObjects[x, y] = new GameObject();
+                _gridSquareObjects[x, y].name = "Cell";
                 _gridSquareObjects[x, y].transform.position = GetWorldPosition(x, y) + new Vector3(_cellSize, _cellSize) * 0.5f;
                 _gridSquareObjects[x, y].transform.localScale = new Vector3(.75f, .75f);
 
@@ -70,6 +71,10 @@ public class Grid
                 squareSR.color = new Color(1, 1, 1, 0);
                 squareSR.sortingLayerName = "Testing";
                 squareSR.sortingOrder = 1;
+
+                /*BoxCollider2D squareCollider = _gridSquareObjects[x, y].AddComponent<BoxCollider2D>();
+                squareCollider.isTrigger = true;
+                squareCollider.size = new Vector2(1.3f, 1.3f);*/
 
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);

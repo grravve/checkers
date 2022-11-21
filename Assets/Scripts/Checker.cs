@@ -32,22 +32,28 @@ public class Checker : MonoBehaviour
         _visual.sprite = _checkerModel.usualSprite;
     }
 
-    public void Move(Vector2 endPoint)
+    public bool Move(Vector2 endPoint, List<Vector2> possibleMoves)
     {
-        if(!CanMove())
+        Vector2 movePointModel = ConvertWorldToModelXY(endPoint);
+        
+        for(int i = 0; i < possibleMoves.Count; i++)
         {
-            return;
+            if (ConvertWorldToModelXY(possibleMoves[i]) == movePointModel)
+            {
+                gameObject.transform.position = movePointModel + new Vector2(_grid.CellSize, _grid.CellSize) * 0.5f;
+                return true;
+            }
         }
 
-        gameObject.transform.position = ConvertWorldToModelXY(endPoint) + new Vector2(_grid.CellSize, _grid.CellSize) * 0.5f;
+        return false;
     }
 
-    public bool CanMove(Vector2 mouseWorldPosition)
+    public void CanMove(out List<Vector2> resultList)
     {
         /*
             Шашка может двигаться на пустую диагональную соседнюю клетку
          */
-        List<Collider2D> possibleMoves = new List<Collider2D>();
+        List<Vector2> possibleMoves = new List<Vector2>();
 
         if (_side == Side.White)
         {
@@ -59,31 +65,38 @@ public class Checker : MonoBehaviour
             possibleMoves = CheckOneCellMove(_grid.CellSize, -_grid.CellSize);
         }
         
-        Debug.Log("Right: " + possibleMoves[0]);
-        Debug.Log("Left: " + possibleMoves[1]);
+        foreach(Vector2 value in possibleMoves)
+        {
+            Debug.Log(value);
+        }
 
-        return true;
+        resultList = possibleMoves;
     }
 
-    private List<Collider2D> CheckOneCellMove(int diagonalX, int diagonalY)
+    private List<Vector2> CheckOneCellMove(int diagonalX, int diagonalY)
     {
-        List<Collider2D> potentialMoves = new List<Collider2D>();
+        List<Vector2> potentialMoves = new List<Vector2>();
 
         Vector2 checkRightDirection = (Vector2)transform.position + new Vector2(diagonalX, diagonalY);
         Vector2 checkLeftDirection = (Vector2)transform.position + new Vector2(-diagonalX, diagonalY);
 
-        if(checkRightDirection.x < _grid.Width && checkRightDirection.x > 0)
+        if(checkRightDirection.x < _grid.Width)
         {
             Collider2D rightCell = Physics2D.OverlapPoint(checkRightDirection);
-            potentialMoves.Add(rightCell);
+            if(rightCell == null)
+            {
+                potentialMoves.Add(checkRightDirection);
+            }
         }
 
-        if (checkLeftDirection.x < _grid.Width && checkLeftDirection.x > 0)
+        if (checkLeftDirection.x > 0)
         {
             Collider2D leftCell = Physics2D.OverlapPoint(checkLeftDirection);
-            potentialMoves.Add(leftCell);
+            if (leftCell == null)
+            {
+                potentialMoves.Add(checkLeftDirection);
+            }
         }
-
         return potentialMoves;
     }    
 

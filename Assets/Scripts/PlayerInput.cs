@@ -10,11 +10,13 @@ public class PlayerInput : MonoBehaviour
 		
 	private Grid _grid;
 	private Checker _selectedChecker;
+    private List<Vector2> possibleMoves;
 
-	private void Start()
+    private void Start()
 	{
         _grid = _board.Grid;
-        Debug.Log(gameObject);
+        possibleMoves = new List<Vector2>();
+       // Debug.Log(gameObject);
     }
 
 	public void HandleInput()
@@ -23,8 +25,15 @@ public class PlayerInput : MonoBehaviour
         {
             Vector2 _mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition, Camera.main);
 
+            if(_mouseWorldPosition.x > _grid.Width || _mouseWorldPosition.x < 0 
+                || _mouseWorldPosition.y > _grid.Height || _mouseWorldPosition.y < 0)
+            {
+                return;
+            }
+
             _grid.SetValue(_mouseWorldPosition);
             Collider2D selectedCollider = Physics2D.OverlapPoint(_mouseWorldPosition);
+           
 
             if (selectedCollider == null && _selectedChecker == null)
             {
@@ -33,17 +42,21 @@ public class PlayerInput : MonoBehaviour
 
             if (selectedCollider == null && _selectedChecker != null)
             {
-                //Изменить на CanMove
-                _selectedChecker.Move(_mouseWorldPosition);
-                _selectedChecker = null;
-                _turnController.SwitchTurn();
+                bool isMoved = _selectedChecker.Move(_mouseWorldPosition, possibleMoves);
+                
+                if(isMoved)
+                {
+                    _selectedChecker = null;
+                    _turnController.SwitchTurn();
+                }
+                
                 return;
             }
 
             if (selectedCollider.TryGetComponent(out Checker checker) && checker.Side == _side)
             {
                 _selectedChecker = checker;
-                _selectedChecker.CanMove();
+                checker.CanMove(out possibleMoves);
                 return;
             }
         }
