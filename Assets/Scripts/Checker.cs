@@ -4,12 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Side { White = 0, Black = 1}
+public enum Side { Black = -1, White = 1}
 public enum Rank { Usual = 0, Queen = 1}
+
+public delegate bool CheckMoveDelegate(Vector2 targetPosition, out bool killedEnemy);
 
 public class Checker : MonoBehaviour
 {
     public Side Side => _side;
+    public CheckMoveDelegate CheckMove;
 
     private Side _side;
     private Rank _rank;
@@ -30,17 +33,75 @@ public class Checker : MonoBehaviour
         _rank = Rank.Usual;
         _visual = GetComponent<SpriteRenderer>();
         _visual.sprite = _checkerModel.usualSprite;
+
+        CheckMove = CanMoveUsual;
     }
 
-    public bool Move(Vector2 endPoint, List<Vector2> possibleMoves)
+    public void Move(Vector2 clickPoint)
     {
-        Vector2 movePointModel = ConvertWorldToModelXY(endPoint);
+       gameObject.transform.position = ConvertWorldToModelXY(clickPoint) + new Vector2(_grid.CellSize, _grid.CellSize) * 0.5f;
+    }
+
+    private bool CanMoveUsual(Vector2 clickPoint, out bool killedEnemy)
+    {
+        killedEnemy = false;
+        Vector3 clickedCellCenter = ConvertWorldToModelXY(clickPoint) + new Vector2(_grid.CellSize, _grid.CellSize) * 0.5f;
+        Vector2 direction = clickedCellCenter - transform.position;
         
-        for(int i = 0; i < possibleMoves.Count; i++)
+        if(Physics2D.OverlapPoint(clickedCellCenter, LayerMask.GetMask("Default")) != null)
         {
-            if (ConvertWorldToModelXY(possibleMoves[i]) == movePointModel)
+            Debug.Log("not booba");
+            return false;
+        }
+
+        double distanceToClick = Math.Round(Vector2.Distance(transform.position, clickedCellCenter), 4);
+        double diagonal = Math.Round(Math.Sqrt(Math.Pow(_grid.CellSize, 2) + Math.Pow(_grid.CellSize, 2)), 4);
+
+        Debug.Log(direction);
+
+        direction = direction.normalized * (int)_side;
+        if (direction.y < 0 && distanceToClick == diagonal)
+        {
+            return false;
+        }
+
+        if (distanceToClick > diagonal * 2)
+        {
+            Debug.Log("It`s so far");
+            return false;
+        }
+        
+        if(distanceToClick == diagonal)
+        {
+            Debug.Log("booba");
+            return true;
+        }
+
+        if(distanceToClick != diagonal * 2)
+        {
+            return false;
+        }
+
+        RaycastHit2D[] hits = Physics2D.LinecastAll(transform.position, clickedCellCenter, LayerMask.GetMask("Default"));
+
+        foreach(var hit in hits)
+        {
+            if(hit.collider.gameObject == gameObject)
             {
-                gameObject.transform.position = movePointModel + new Vector2(_grid.CellSize, _grid.CellSize) * 0.5f;
+                continue;
+            }
+
+            if(hit.collider.gameObject.tag == gameObject.tag)
+            {
+                Debug.Log("same booba");
+                return false;
+            }
+
+            if (hit.collider.gameObject.tag != gameObject.tag)
+            {
+                Debug.Log("not same booba");
+                hit.collider.gameObject.SetActive(false);
+                killedEnemy = true;
                 return true;
             }
         }
@@ -48,57 +109,11 @@ public class Checker : MonoBehaviour
         return false;
     }
 
-    public void CanMove(out List<Vector2> resultList)
+    private bool CanMoveQueen(Vector2 clickPoint, out bool killedEnemy) 
     {
-        /*
-            Шашка может двигаться на пустую диагональную соседнюю клетку
-         */
-        List<Vector2> possibleMoves = new List<Vector2>();
-
-        if (_side == Side.White)
-        {
-            possibleMoves = CheckOneCellMove(_grid.CellSize, _grid.CellSize);
-        }
-
-        if(_side == Side.Black)
-        {
-            possibleMoves = CheckOneCellMove(_grid.CellSize, -_grid.CellSize);
-        }
-        
-        foreach(Vector2 value in possibleMoves)
-        {
-            Debug.Log(value);
-        }
-
-        resultList = possibleMoves;
+        killedEnemy = true;
+        return true;
     }
-
-    private List<Vector2> CheckOneCellMove(int diagonalX, int diagonalY)
-    {
-        List<Vector2> potentialMoves = new List<Vector2>();
-
-        Vector2 checkRightDirection = (Vector2)transform.position + new Vector2(diagonalX, diagonalY);
-        Vector2 checkLeftDirection = (Vector2)transform.position + new Vector2(-diagonalX, diagonalY);
-
-        if(checkRightDirection.x < _grid.Width)
-        {
-            Collider2D rightCell = Physics2D.OverlapPoint(checkRightDirection);
-            if(rightCell == null)
-            {
-                potentialMoves.Add(checkRightDirection);
-            }
-        }
-
-        if (checkLeftDirection.x > 0)
-        {
-            Collider2D leftCell = Physics2D.OverlapPoint(checkLeftDirection);
-            if (leftCell == null)
-            {
-                potentialMoves.Add(checkLeftDirection);
-            }
-        }
-        return potentialMoves;
-    }    
 
     private Vector2 ConvertWorldToModelXY(Vector2 worldPosition)
     {
@@ -111,5 +126,12 @@ public class Checker : MonoBehaviour
     {
         _rank = Rank.Queen;
         _visual.sprite = _checkerModel.queenSprite;
+        CheckMove = CanMoveQueen;
+    }
+
+    public void Die()
+    {
+        gameObject.SetActive(false);
+        // Обновление счетчика с помощью события
     }
 }

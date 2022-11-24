@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   usualSprite: {fileID: 42439568, guid: 6c58faefcc85ed44cb54ec18009ea5fb, type: 3}
   queenSprite: {fileID: -1604953960, guid: 6c58faefcc85ed44cb54ec18009ea5fb, type: 3}
-  side: 1
+  side: -1

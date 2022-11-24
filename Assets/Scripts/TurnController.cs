@@ -17,5 +17,6 @@ public class TurnController : MonoBehaviour
     public void SwitchTurn()
     {
         _currentTurnIndex++;
+        Debug.Log(_turnOrder[_currentTurnIndex % _turnOrder.Count]._side);
     }
 }

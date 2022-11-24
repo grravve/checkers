@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
 	[SerializeField] private Board _board;
-	[SerializeField] private Side _side;
+	[SerializeField] public Side _side;
 	[SerializeField] private TurnController _turnController;
 		
 	private Grid _grid;
@@ -32,9 +32,8 @@ public class PlayerInput : MonoBehaviour
             }
 
             _grid.SetValue(_mouseWorldPosition);
-            Collider2D selectedCollider = Physics2D.OverlapPoint(_mouseWorldPosition);
+            Collider2D selectedCollider = Physics2D.OverlapPoint(_mouseWorldPosition, LayerMask.GetMask("Default"));
            
-
             if (selectedCollider == null && _selectedChecker == null)
             {
                 return;
@@ -42,13 +41,21 @@ public class PlayerInput : MonoBehaviour
 
             if (selectedCollider == null && _selectedChecker != null)
             {
-                bool isMoved = _selectedChecker.Move(_mouseWorldPosition, possibleMoves);
-                
-                if(isMoved)
+                bool killed = false;
+                if(!_selectedChecker.CheckMove(_mouseWorldPosition, out killed))
                 {
-                    _selectedChecker = null;
-                    _turnController.SwitchTurn();
+                    return;
                 }
+
+                _selectedChecker.Move(_mouseWorldPosition);
+                _selectedChecker = null;
+
+                if(killed)
+                {
+                    return;
+                }
+
+                _turnController.SwitchTurn();
                 
                 return;
             }
@@ -56,7 +63,6 @@ public class PlayerInput : MonoBehaviour
             if (selectedCollider.TryGetComponent(out Checker checker) && checker.Side == _side)
             {
                 _selectedChecker = checker;
-                checker.CanMove(out possibleMoves);
                 return;
             }
         }
