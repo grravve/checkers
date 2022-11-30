@@ -12,6 +12,7 @@ public delegate bool CheckMoveDelegate(Vector2 targetPosition, out bool killedEn
 public class Checker : MonoBehaviour
 {
     public Side Side => _side;
+    public Rank Rank => _rank;
     public CheckMoveDelegate CheckMove;
 
     private Side _side;
@@ -67,13 +68,11 @@ public class Checker : MonoBehaviour
 
         if (distanceToClick > diagonal * 2)
         {
-            Debug.Log("It`s so far");
             return false;
         }
         
         if(distanceToClick == diagonal)
         {
-            Debug.Log("booba");
             return true;
         }
 
@@ -93,7 +92,6 @@ public class Checker : MonoBehaviour
 
             if(hit.collider.gameObject.tag == gameObject.tag)
             {
-                Debug.Log("same booba");
                 return false;
             }
 
@@ -111,8 +109,68 @@ public class Checker : MonoBehaviour
 
     private bool CanMoveQueen(Vector2 clickPoint, out bool killedEnemy) 
     {
-        killedEnemy = true;
-        return true;
+        killedEnemy = false;
+
+        Vector3 clickedCellCenter = ConvertWorldToModelXY(clickPoint) + new Vector2(_grid.CellSize, _grid.CellSize) * 0.5f;
+        Vector2 direction = clickedCellCenter - transform.position;
+
+        if (Physics2D.OverlapPoint(clickedCellCenter, LayerMask.GetMask("Default")) != null)
+        {
+            return false;
+        }
+
+        double distanceToClick = Math.Round(Vector2.Distance(transform.position, clickedCellCenter), 4);
+        double diagonal = Math.Round(Math.Sqrt(Math.Pow(_grid.CellSize, 2) + Math.Pow(_grid.CellSize, 2)), 4);
+
+        direction = direction.normalized * (int)_side;
+
+        Debug.Log($"Distance: {distanceToClick}\nDiagonal: {diagonal}\nDirection: {direction}");
+
+        if (distanceToClick == diagonal)
+        {
+            Debug.Log("Near cell");
+            return true;
+        }
+
+        /*if (direction.y < 0 && distanceToClick > diagonal)
+        {
+            return false;
+        }*/
+
+        RaycastHit2D[] hits = Physics2D.LinecastAll(transform.position, clickedCellCenter, LayerMask.GetMask("Default"));
+        
+        if(hits.Length > 2)
+        {
+            return false;
+        }
+
+        foreach(var hit in hits)
+        {
+            if(hit.collider.gameObject == gameObject)
+            {
+                continue;
+            }
+
+            if (hit.collider.gameObject.tag == gameObject.tag)
+            {
+                return false;
+            }
+
+            if (hit.collider.gameObject.tag != gameObject.tag)
+            {
+                hit.collider.gameObject.SetActive(false);
+                killedEnemy = true;
+                return true;
+            }
+        }
+
+        if(distanceToClick > diagonal)
+        {
+            Debug.Log("Far cell");
+            return true;
+        }
+
+        return false;
     }
 
     private Vector2 ConvertWorldToModelXY(Vector2 worldPosition)

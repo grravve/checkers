@@ -63,6 +63,7 @@ public class PlayerInput : MonoBehaviour
             if (selectedCollider.TryGetComponent(out Checker checker) && checker.Side == _side)
             {
                 _selectedChecker = checker;
+                Debug.Log(_selectedChecker.Rank);
                 return;
             }
         }

@@ -118,9 +118,4 @@ public class Grid
         GetXY(worldPosition, out x, out y);
         SetValue(x, y);
     }
-
-    public void SetCellColor(Color color)
-    {
-
-    }
 }

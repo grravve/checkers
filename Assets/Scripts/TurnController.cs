@@ -7,6 +7,8 @@ public class TurnController : MonoBehaviour
 {
     [SerializeField] private List<PlayerInput> _turnOrder;
 
+    public int TurnIndex => _currentTurnIndex;
+
     private int _currentTurnIndex = 0;
 
     private void Update()
