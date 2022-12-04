@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Branch
+public class Branch : MonoBehaviour
 {
     public readonly string Name;
-    public Commit CurrentCommit => _currentCommit;
-
+    
     private Commit _currentCommit;
 
     public Branch(string name)
