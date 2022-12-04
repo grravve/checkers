@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckersData : MonoBehaviour
+public class CheckersData
 {
     private Vector2 _worldPosition;
     private Rank _checkerRank;

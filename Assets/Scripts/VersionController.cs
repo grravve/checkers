@@ -7,6 +7,7 @@ public class VersionController : MonoBehaviour
     private List<Branch> _branches;
     private Branch _currentBranch;
     private Commit _lastCommit;
+    private TurnController _turnController;
 
     private CheckersData[] _currentCheckersData;
     private int _currentTurnIndex;
@@ -16,6 +17,8 @@ public class VersionController : MonoBehaviour
         _branches = new List<Branch>();
         _currentBranch = new Branch("master");
         _branches.Add(_currentBranch);
+        _turnController = FindObjectOfType<TurnController>();
+        
     }
     // Добавить ветку
     // Поменять ветку
@@ -24,7 +27,10 @@ public class VersionController : MonoBehaviour
     public void Commit()
     {
         _currentCheckersData = GenerateCheckersData();
-        _currentTurnIndex = GetComponent<TurnController>().TurnIndex;
+        _currentTurnIndex = _turnController.TurnIndex;
+        _lastCommit = new Commit(_currentBranch.CurrentCommit, _currentCheckersData, _currentTurnIndex);
+        _currentBranch.AddCommit(_lastCommit);
+        //update ui
     }
 
     private CheckersData[] GenerateCheckersData()
@@ -38,5 +44,12 @@ public class VersionController : MonoBehaviour
         }
 
         return resultArr;
+    }
+
+    public void UpdateCheckersData()
+    {
+        // Args: Commit
+        // This function calls when current branch was switched
+        // Find all Checker objects and change their current data to the commit`s data 
     }
 }
