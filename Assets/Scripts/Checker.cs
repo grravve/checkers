@@ -51,7 +51,6 @@ public class Checker : MonoBehaviour
         
         if(Physics2D.OverlapPoint(clickedCellCenter, LayerMask.GetMask("Default")) != null)
         {
-            Debug.Log("not booba");
             return false;
         }
 
@@ -97,7 +96,6 @@ public class Checker : MonoBehaviour
 
             if (hit.collider.gameObject.tag != gameObject.tag)
             {
-                Debug.Log("not same booba");
                 hit.collider.gameObject.SetActive(false);
                 killedEnemy = true;
                 return true;
@@ -128,7 +126,6 @@ public class Checker : MonoBehaviour
 
         if (distanceToClick == diagonal)
         {
-            Debug.Log("Near cell");
             return true;
         }
 

@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Commit
 {
-    public Commit LastCommit;
+    public Commit PreviosCommit;
+    public List<Commit> NextCommits;
     public CheckersData[] CheckersData;
     public int CurrentTurnIndex; 
 
-    public Commit(Commit lastCommit, CheckersData[] checkersData, int currentTurnIndex)
+    public Commit(CheckersData[] checkersData, int currentTurnIndex)
     {
-        LastCommit = lastCommit;
         CheckersData = checkersData;
         CurrentTurnIndex = currentTurnIndex;
+        NextCommits = new List<Commit>();
     }
 }
