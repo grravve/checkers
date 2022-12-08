@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,19 +8,23 @@ public class UIController : MonoBehaviour
 {
     [SerializeField] private Transform _branchList;
     [SerializeField] private Transform _commitList;
+    [SerializeField] private GameObject _branchesPage;
+    [SerializeField] private GameObject _commitsPage;
     [SerializeField] private GameObject _listItemPrefab;
-    [SerializeField] private VersionController _versionController;
+    
+    private VersionController _versionController;
 
     private void Start()
     {
+        _versionController = FindObjectOfType<VersionController>();
         UpdateBranchList();
     }
 
     private void UpdateBranchList()
     {
-        foreach(Transform branchObj in _branchList)
+        foreach(Transform branchButtonObj in _branchList)
         {
-            Destroy(branchObj.gameObject);
+            Destroy(branchButtonObj.gameObject);
         }
 
         for (int i = 0; i < _versionController.Branches.Count; i++)
@@ -31,25 +36,48 @@ public class UIController : MonoBehaviour
             branchButton.GetComponent<Button>().onClick.AddListener(() =>
             {
                 // Switch branch
-                _versionController.SwitchBranch(_versionController.Branches[i]);
+                int index = i - 1;
+                Debug.Log(index);
+                _versionController.SwitchBranch(_versionController.Branches[index]);
 
-                _branchList.gameObject.SetActive(false);
-                _commitList.gameObject.SetActive(true);
+                _branchesPage.SetActive(false);
+                _commitsPage.SetActive(true); ;
 
-                UpdateCommitsList(_versionController.Branches[i]);
-
-                Debug.Log("Switch to the commit page");
+                UpdateCommitsList(_versionController.Branches[index]);
             });
         }
     }
 
     private void UpdateCommitsList(Branch branch)
     {
-        // Update list name 
+        _commitsPage.GetComponentInChildren<Text>().text = branch.Name;
+        
+        if (branch.CurrentCommit == null)
+        {
+            return;
+        }
+
         // Show current commits in this branch
-        // Update world data in the scene (last commit of the branch)
+
+        foreach (Transform commitButtonObj in _commitList)
+        {
+            Destroy(commitButtonObj.gameObject);
+        }
+        
+        for(int i = 0; i < _versionController.CurrentCommit.NextCommits.Count; i++)
+        {
+            var commitButton = Instantiate(_listItemPrefab);
+            commitButton.transform.SetParent(_commitList, false);
+
+            commitButton.GetComponentInChildren<Text>().text = _versionController.CurrentCommit.NextCommits[i].Id;
+            commitButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Commit selectedCommit = _versionController.CurrentCommit.NextCommits[i];
+                _versionController.UpdateCheckersData(selectedCommit);
+            });
+        }
+        // Event when current commit in list or current branch was changed, update data on scene
     }
 
-    // Event when current commit in list or current branch was changed, update data on scene
 
 }

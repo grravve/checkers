@@ -187,7 +187,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 40
+    m_MaxSize: 93
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1852,6 +1852,7 @@ GameObject:
   - component: {fileID: 897205498}
   - component: {fileID: 897205497}
   - component: {fileID: 897205496}
+  - component: {fileID: 897205500}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: Untagged
@@ -1943,6 +1944,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &897205500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897205495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38bd4df5928c3d14281dcdac7219bb1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _branchList: {fileID: 593256696}
+  _commitList: {fileID: 1794860124}
+  _branchesPage: {fileID: 1635042350}
+  _commitsPage: {fileID: 1205330690}
+  _listItemPrefab: {fileID: 5591783314620536807, guid: 295c74ac94fa7914dbea8dae6812b281, type: 3}
 --- !u!1 &898208321
 GameObject:
   m_ObjectHideFlags: 0
@@ -2080,6 +2098,7 @@ GameObject:
   m_Component:
   - component: {fileID: 979194631}
   - component: {fileID: 979194630}
+  - component: {fileID: 979194632}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -2118,6 +2137,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &979194632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979194629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4c33e3b3740dba4aac3968b77a794ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1077285948
 GameObject:
   m_ObjectHideFlags: 0

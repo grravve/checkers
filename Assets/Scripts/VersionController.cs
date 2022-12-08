@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class VersionController : MonoBehaviour
 {
+    public Commit CurrentCommit;
+
     public List<Branch> Branches => _branches;
 
     private List<Branch> _branches;
     private Branch _currentBranch;
-    private Commit _currentCommit;
     private Commit _lastCommit;
     private TurnController _turnController;
 
@@ -18,7 +19,7 @@ public class VersionController : MonoBehaviour
     public void Awake()
     {
         _branches = new List<Branch>();
-        _currentCommit = null;
+        CurrentCommit = null;
         _lastCommit = null;
         _currentBranch = new Branch("master");
         _branches.Add(_currentBranch);
@@ -31,14 +32,14 @@ public class VersionController : MonoBehaviour
         _currentTurnIndex = _turnController.TurnIndex;
         _lastCommit = new Commit(_currentCheckersData, _currentTurnIndex);
         _currentBranch.AddCommit(_lastCommit);
-        _currentCommit = _lastCommit;
+        CurrentCommit = _lastCommit;
         //update ui
     }
 
     public void AddBranch(string branchName, Commit newBranchCommit)
     {
-        _currentCommit.NextCommits.Add(newBranchCommit);
-        newBranchCommit.PreviosCommit = _currentCommit;
+        CurrentCommit.NextCommits.Add(newBranchCommit);
+        newBranchCommit.PreviosCommit = CurrentCommit;
         _lastCommit = newBranchCommit;
 
         _currentBranch = new Branch(branchName, _lastCommit);
@@ -54,10 +55,10 @@ public class VersionController : MonoBehaviour
 
         _currentBranch = branch;
         _lastCommit = _currentBranch.CurrentCommit;
-        UpdateCheckersData();
+        UpdateCheckersData(_lastCommit);
     }
 
- /*   public void DeleteBranch(Branch branch)
+    public void DeleteBranch(Branch branch)
     {
         if (!_branches.Contains(branch))
         {
@@ -65,7 +66,7 @@ public class VersionController : MonoBehaviour
         }
 
         _branches.Remove(branch);
-    }*/
+    }
 
     private CheckersData[] GenerateCheckersData()
     {
@@ -80,7 +81,7 @@ public class VersionController : MonoBehaviour
         return resultArr;
     }
 
-    public void UpdateCheckersData()
+    public void UpdateCheckersData(Commit commit)
     {
         // Args: Commit
         // This function calls when current branch was switched
