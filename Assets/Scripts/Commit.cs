@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Commit
+public class Commit: IEquatable<Commit>
 {
     public Commit PreviosCommit;
     public List<Commit> NextCommits;
@@ -15,8 +15,23 @@ public class Commit
     public Commit(CheckersData[] checkersData, int currentTurnIndex)
     {
         Id = Guid.NewGuid().ToString("N");
+        NextCommits = new List<Commit>();
         CheckersData = checkersData;
         CurrentTurnIndex = currentTurnIndex;
-        NextCommits = new List<Commit>();
+    }
+
+    public bool Equals(Commit other)
+    {
+        if (other.CheckersData.Equals(CheckersData) == false)
+        {
+            return false;
+        }
+
+        if(other.CurrentTurnIndex != CurrentTurnIndex)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

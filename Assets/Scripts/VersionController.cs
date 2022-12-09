@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,10 +19,10 @@ public class VersionController : MonoBehaviour
 
     public void Awake()
     {
-        _branches = new List<Branch>();
         CurrentCommit = null;
         _lastCommit = null;
         _currentBranch = new Branch("master");
+        _branches = new List<Branch>();
         _branches.Add(_currentBranch);
         _turnController = FindObjectOfType<TurnController>();
     }
@@ -30,10 +31,30 @@ public class VersionController : MonoBehaviour
     {
         _currentCheckersData = GenerateCheckersData();
         _currentTurnIndex = _turnController.TurnIndex;
-        _lastCommit = new Commit(_currentCheckersData, _currentTurnIndex);
-        _currentBranch.AddCommit(_lastCommit);
-        CurrentCommit = _lastCommit;
-        //update ui
+
+        Commit newCommit = new Commit(_currentCheckersData, _currentTurnIndex);
+
+        if(CurrentCommit == null)
+        {
+            _currentBranch.AddCommit(newCommit);
+            _lastCommit = _currentBranch.CurrentCommit;
+            CurrentCommit = _lastCommit;
+        }
+
+        if (newCommit.Equals(newCommit) == true)
+        {
+            return;
+        }
+
+        foreach(Commit checkCommit in CurrentCommit.NextCommits)
+        {
+            if (CurrentCommit.Equals(checkCommit))
+            {
+                return;
+            }
+        }
+
+        AddBranch(Guid.NewGuid().ToString("N"), newCommit);
     }
 
     public void AddBranch(string branchName, Commit newBranchCommit)

@@ -23,13 +23,13 @@ public class Branch
 
     public void AddCommit(Commit newCommit)
     {
-        if(_currentCommit != null)
+        if(_currentCommit == null)
         {
             _currentCommit = newCommit;
         }
 
         newCommit.PreviosCommit = _currentCommit;
-        _currentCommit.NextCommits.Add(newCommit);
+        _currentCommit?.NextCommits.Add(newCommit);
         _currentCommit = newCommit;
     }
 }
