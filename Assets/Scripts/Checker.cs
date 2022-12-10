@@ -57,8 +57,6 @@ public class Checker : MonoBehaviour
         double distanceToClick = Math.Round(Vector2.Distance(transform.position, clickedCellCenter), 4);
         double diagonal = Math.Round(Math.Sqrt(Math.Pow(_grid.CellSize, 2) + Math.Pow(_grid.CellSize, 2)), 4);
 
-        Debug.Log(direction);
-
         direction = direction.normalized * (int)_side;
         if (direction.y < 0 && distanceToClick == diagonal)
         {
@@ -187,6 +185,25 @@ public class Checker : MonoBehaviour
     public void Die()
     {
         gameObject.SetActive(false);
-        // Обновление счетчика с помощью события
+    }
+
+    public void SetSide(Side side)
+    {
+        _side = side;
+    }
+
+    public void SetRank(Rank rank)
+    {
+        _rank = rank;
+
+        if (_rank == Rank.Queen)
+        {
+            _visual.sprite = _checkerModel.queenSprite;
+            CheckMove = CanMoveQueen;
+            return;
+        }
+
+        _visual.sprite = _checkerModel.usualSprite;
+        CheckMove = CanMoveUsual;
     }
 }

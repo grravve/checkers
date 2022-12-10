@@ -5,30 +5,44 @@ using UnityEngine;
 
 public class CheckersData: IEquatable<CheckersData>
 {
-    private Vector2 _worldPosition;
-    private Rank _checkerRank;
-    private Side _checkerSide;
+    public Vector2 WorldPosition { get; private set; }
+    public Rank CheckerRank { get; private set; }
+    public Side CheckerSide { get; private set; }
+    public int CurrentTurnIndex { get; private set; }
+    public bool IsDead { get; private set; }
 
-    public CheckersData(Checker checker)
+    public CheckersData(Checker checker, int currentTurnIndex)
     {
-        _worldPosition = checker.transform.position;
-        _checkerRank = checker.Rank;
-        _checkerSide = checker.Side;
+        WorldPosition = checker.transform.position;
+        CheckerRank = checker.Rank;
+        CheckerSide = checker.Side;
+        CurrentTurnIndex = currentTurnIndex;
+        IsDead = checker.gameObject.activeSelf;
     }
 
     public bool Equals(CheckersData other)
     {
-        if(other._checkerRank != _checkerRank)
+        if(other.CheckerRank != CheckerRank)
         {
             return false;
         }
 
-        if(other._checkerSide != _checkerSide)
+        if(other.CheckerSide != CheckerSide)
         {
             return false;
         }
 
-        if(other._worldPosition.x != _worldPosition.x || other._worldPosition.y != _worldPosition.y)
+        if(other.CurrentTurnIndex != CurrentTurnIndex)
+        {
+            return false;
+        }
+
+        if(other.IsDead != IsDead)
+        {
+            return false;
+        }
+
+        if(other.WorldPosition.x != WorldPosition.x || other.WorldPosition.y != WorldPosition.y)
         {
             return false;
         }

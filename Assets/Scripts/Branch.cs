@@ -26,9 +26,10 @@ public class Branch
         if(_currentCommit == null)
         {
             _currentCommit = newCommit;
+            return;
         }
 
-        newCommit.PreviosCommit = _currentCommit;
+        newCommit.PreviousCommit = _currentCommit;
         _currentCommit?.NextCommits.Add(newCommit);
         _currentCommit = newCommit;
     }

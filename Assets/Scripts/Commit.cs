@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Commit: IEquatable<Commit>
 {
-    public Commit PreviosCommit;
+    public Commit PreviousCommit = null;
     public List<Commit> NextCommits;
     public string Id;
 
@@ -14,7 +14,7 @@ public class Commit: IEquatable<Commit>
 
     public Commit(CheckersData[] checkersData, int currentTurnIndex)
     {
-        Id = Guid.NewGuid().ToString("N");
+        Id = Guid.NewGuid().ToString();
         NextCommits = new List<Commit>();
         CheckersData = checkersData;
         CurrentTurnIndex = currentTurnIndex;
@@ -22,9 +22,12 @@ public class Commit: IEquatable<Commit>
 
     public bool Equals(Commit other)
     {
-        if (other.CheckersData.Equals(CheckersData) == false)
+        for(int i = 0; i < CheckersData.Length; i++)
         {
-            return false;
+            if (other.CheckersData[i].Equals(CheckersData[i]) == false)
+            {
+                return false;
+            }
         }
 
         if(other.CurrentTurnIndex != CurrentTurnIndex)

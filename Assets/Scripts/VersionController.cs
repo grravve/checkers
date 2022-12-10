@@ -39,32 +39,42 @@ public class VersionController : MonoBehaviour
             _currentBranch.AddCommit(newCommit);
             _lastCommit = _currentBranch.CurrentCommit;
             CurrentCommit = _lastCommit;
+            return;
         }
 
-        if (newCommit.Equals(newCommit) == true)
+        if (newCommit.Equals(CurrentCommit) == true)
         {
+            return;
+        }
+
+        if(CurrentCommit.NextCommits.Count == 0)
+        {
+            _currentBranch.AddCommit(newCommit);
+            _lastCommit = _currentBranch.CurrentCommit;
+            CurrentCommit = _lastCommit;
             return;
         }
 
         foreach(Commit checkCommit in CurrentCommit.NextCommits)
         {
-            if (CurrentCommit.Equals(checkCommit))
+            if (newCommit.Equals(checkCommit) == true)
             {
                 return;
             }
         }
 
-        AddBranch(Guid.NewGuid().ToString("N"), newCommit);
+        AddBranch(Guid.NewGuid().ToString(), newCommit);
     }
 
     public void AddBranch(string branchName, Commit newBranchCommit)
     {
         CurrentCommit.NextCommits.Add(newBranchCommit);
-        newBranchCommit.PreviosCommit = CurrentCommit;
+        newBranchCommit.PreviousCommit = CurrentCommit;
         _lastCommit = newBranchCommit;
 
         _currentBranch = new Branch(branchName, _lastCommit);
         _branches.Add(_currentBranch);
+        CurrentCommit = _currentBranch.CurrentCommit;
     }
 
     public void SwitchBranch(Branch branch)
@@ -76,17 +86,42 @@ public class VersionController : MonoBehaviour
 
         _currentBranch = branch;
         _lastCommit = _currentBranch.CurrentCommit;
-        UpdateCheckersData(_lastCommit);
+        CurrentCommit = _lastCommit;
+        UpdateCheckersData(CurrentCommit);
     }
 
-    public void DeleteBranch(Branch branch)
+    public void DeleteCurrentBranch()
     {
-        if (!_branches.Contains(branch))
+        if (_branches.Count == 1)
         {
             return;
         }
 
-        _branches.Remove(branch);
+        _branches.Remove(_currentBranch);
+        _currentBranch = _branches[_branches.Count - 1];
+        CurrentCommit = _currentBranch.CurrentCommit;
+       
+        UpdateCheckersData(CurrentCommit);
+    }
+
+    public void LoadCommit(Commit commit)
+    {
+        CurrentCommit = commit;
+        UpdateCheckersData(commit);
+    }
+
+    public void LoadPreviousCommit()
+    {
+        Commit previousCommit = CurrentCommit?.PreviousCommit;
+        CurrentCommit = previousCommit;
+
+        UpdateCheckersData(CurrentCommit);
+    }
+
+    public void LoadLastCommit()
+    {
+        CurrentCommit = _lastCommit;
+        UpdateCheckersData(CurrentCommit);
     }
 
     private CheckersData[] GenerateCheckersData()
@@ -96,7 +131,7 @@ public class VersionController : MonoBehaviour
 
         for (int i = 0; i < checkers.Length; i++)
         {
-            resultArr[i] = new CheckersData(checkers[i]);
+            resultArr[i] = new CheckersData(checkers[i], _turnController.TurnIndex);
         }
 
         return resultArr;
@@ -104,8 +139,15 @@ public class VersionController : MonoBehaviour
 
     public void UpdateCheckersData(Commit commit)
     {
-        // Args: Commit
-        // This function calls when current branch was switched
-        // Find all Checker objects and change their current data to the commit`s of the current branch data 
+        Checker[] checkers = Resources.FindObjectsOfTypeAll<Checker>();
+
+        for (int i = 0; i < commit.CheckersData.Length; i++)
+        {
+            checkers[i].gameObject.SetActive(commit.CheckersData[i].IsDead);
+            checkers[i].gameObject.transform.position = commit.CheckersData[i].WorldPosition;
+            checkers[i].SetSide(commit.CheckersData[i].CheckerSide);
+            checkers[i].SetRank(commit.CheckersData[i].CheckerRank);
+            _turnController.ChangeCurrentTurn(commit.CheckersData[i].CurrentTurnIndex);
+        }
     }
 }
