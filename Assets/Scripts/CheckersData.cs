@@ -8,7 +8,6 @@ public class CheckersData: IEquatable<CheckersData>
     public Vector2 WorldPosition { get; private set; }
     public Rank CheckerRank { get; private set; }
     public Side CheckerSide { get; private set; }
-    public int CurrentTurnIndex { get; private set; }
     public bool IsDead { get; private set; }
 
     public CheckersData(Checker checker, int currentTurnIndex)
@@ -16,7 +15,6 @@ public class CheckersData: IEquatable<CheckersData>
         WorldPosition = checker.transform.position;
         CheckerRank = checker.Rank;
         CheckerSide = checker.Side;
-        CurrentTurnIndex = currentTurnIndex;
         IsDead = checker.gameObject.activeSelf;
     }
 
@@ -28,11 +26,6 @@ public class CheckersData: IEquatable<CheckersData>
         }
 
         if(other.CheckerSide != CheckerSide)
-        {
-            return false;
-        }
-
-        if(other.CurrentTurnIndex != CurrentTurnIndex)
         {
             return false;
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class VersionController : MonoBehaviour
@@ -14,6 +15,7 @@ public class VersionController : MonoBehaviour
     private Commit _lastCommit;
     private TurnController _turnController;
 
+    private Checker[] _checkersObjects;
     private CheckersData[] _currentCheckersData;
     private int _currentTurnIndex;
 
@@ -24,7 +26,12 @@ public class VersionController : MonoBehaviour
         _currentBranch = new Branch("master");
         _branches = new List<Branch>();
         _branches.Add(_currentBranch);
+    }
+
+    public void Start()
+    {
         _turnController = FindObjectOfType<TurnController>();
+        _checkersObjects = FindObjectsOfType<Checker>();
     }
 
     public void Commit()
@@ -126,12 +133,12 @@ public class VersionController : MonoBehaviour
 
     private CheckersData[] GenerateCheckersData()
     {
-        Checker[] checkers = FindObjectsOfType<Checker>();
-        CheckersData[] resultArr = new CheckersData[checkers.Length];
+        Debug.Log(_checkersObjects.Length);
+        CheckersData[] resultArr = new CheckersData[_checkersObjects.Length];
 
-        for (int i = 0; i < checkers.Length; i++)
+        for (int i = 0; i < _checkersObjects.Length; i++)
         {
-            resultArr[i] = new CheckersData(checkers[i], _turnController.TurnIndex);
+            resultArr[i] = new CheckersData(_checkersObjects[i], _turnController.TurnIndex);
         }
 
         return resultArr;
@@ -139,15 +146,14 @@ public class VersionController : MonoBehaviour
 
     public void UpdateCheckersData(Commit commit)
     {
-        Checker[] checkers = Resources.FindObjectsOfTypeAll<Checker>();
-
-        for (int i = 0; i < commit.CheckersData.Length; i++)
+        for (int i = 0; i < _checkersObjects.Length; i++)
         {
-            checkers[i].gameObject.SetActive(commit.CheckersData[i].IsDead);
-            checkers[i].gameObject.transform.position = commit.CheckersData[i].WorldPosition;
-            checkers[i].SetSide(commit.CheckersData[i].CheckerSide);
-            checkers[i].SetRank(commit.CheckersData[i].CheckerRank);
-            _turnController.ChangeCurrentTurn(commit.CheckersData[i].CurrentTurnIndex);
+            _checkersObjects[i].gameObject.SetActive(commit.CheckersData[i].IsDead);
+            _checkersObjects[i].gameObject.transform.position = commit.CheckersData[i].WorldPosition;
+            _checkersObjects[i].SetSide(commit.CheckersData[i].CheckerSide);
+            _checkersObjects[i].SetRank(commit.CheckersData[i].CheckerRank);
         }
+        
+        _turnController.ChangeCurrentTurn(commit.CurrentTurnIndex);
     }
 }

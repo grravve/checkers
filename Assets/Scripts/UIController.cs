@@ -36,8 +36,6 @@ public class UIController : MonoBehaviour
             branchButton.GetComponent<Button>().onClick.AddListener(() =>
             {
                 // Switch branch
-                
-                Debug.Log(index);
                 _versionController.SwitchBranch(_versionController.Branches[index]);
                 UpdateCommitsList();
             });
@@ -74,8 +72,6 @@ public class UIController : MonoBehaviour
     {
         _versionController.Commit();
 
-        Debug.Log(_versionController.CurrentCommit.Id);
-        Debug.Log(_versionController.CurrentCommit.NextCommits.Count);
         UpdateBranchList();
         UpdateCommitsList();
     }
