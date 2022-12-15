@@ -7,17 +7,8 @@ public class PlayerInput : MonoBehaviour
 	[SerializeField] private Board _board;
 	[SerializeField] public Side _side;
 	[SerializeField] private TurnController _turnController;
-		
-	private Grid _grid;
-	private Checker _selectedChecker;
-    private List<Vector2> possibleMoves;
 
-    private void Start()
-	{
-        _grid = _board.Grid;
-        possibleMoves = new List<Vector2>();
-       // Debug.Log(gameObject);
-    }
+	private Checker _selectedChecker;
 
 	public void HandleInput()
 	{
@@ -25,13 +16,13 @@ public class PlayerInput : MonoBehaviour
         {
             Vector2 _mouseWorldPosition = GetMouseWorldPosition(Input.mousePosition, Camera.main);
 
-            if(_mouseWorldPosition.x > _grid.Width || _mouseWorldPosition.x < 0 
-                || _mouseWorldPosition.y > _grid.Height || _mouseWorldPosition.y < 0)
+            if(_mouseWorldPosition.x > _board.Grid.Width || _mouseWorldPosition.x < 0 
+                || _mouseWorldPosition.y > _board.Grid.Width || _mouseWorldPosition.y < 0)
             {
                 return;
             }
 
-            _grid.SetValue(_mouseWorldPosition);
+            _board.Grid.SetValue(_mouseWorldPosition);
             Collider2D selectedCollider = Physics2D.OverlapPoint(_mouseWorldPosition, LayerMask.GetMask("Default"));
            
             if (selectedCollider == null && _selectedChecker == null)

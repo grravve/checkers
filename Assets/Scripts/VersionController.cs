@@ -19,7 +19,7 @@ public class VersionController : MonoBehaviour
     private CheckersData[] _currentCheckersData;
     private int _currentTurnIndex;
 
-    public void Awake()
+    private void Awake()
     {
         CurrentCommit = null;
         _lastCommit = null;
@@ -28,7 +28,7 @@ public class VersionController : MonoBehaviour
         _branches.Add(_currentBranch);
     }
 
-    public void Start()
+    private void Start()
     {
         _turnController = FindObjectOfType<TurnController>();
         _checkersObjects = FindObjectsOfType<Checker>();
@@ -144,7 +144,7 @@ public class VersionController : MonoBehaviour
         return resultArr;
     }
 
-    public void UpdateCheckersData(Commit commit)
+    private void UpdateCheckersData(Commit commit)
     {
         for (int i = 0; i < _checkersObjects.Length; i++)
         {
